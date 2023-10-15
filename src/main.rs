@@ -1,9 +1,13 @@
 use std::cmp::Ordering;
 use std::process::exit;
 use rand::Rng;
-use std::process::Command;
 use colored::{Colorize, ColoredString};
 use std::io::{self, Write};
+use crossterm::terminal::Clear;
+use crossterm::terminal::ClearType;
+use crossterm::cursor::MoveTo;
+use crossterm::execute;
+use std::io::stdout;
 
 
 trait ColorizeString{
@@ -154,12 +158,12 @@ fn run_game(difficulty: usize) {
 }
 
 fn clear_terminal() {
-    if cfg!(target_os = "windows") {
-        Command::new("cls").status().unwrap();
-    } else {
-        Command::new("clear").status().unwrap();
-        Command::new("clear").status().unwrap();
-    }
+    execute! (
+        stdout(),
+        Clear(ClearType::All),
+        MoveTo(0, 0),
+        ).unwrap();
+    stdout().flush().unwrap();
 }
 
 fn get_user_input() -> String {
